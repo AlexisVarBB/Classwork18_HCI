@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.XR; // Lee directamente las entradas de los mandos XR
+using UnityEngine.XR;
 
 [RequireComponent(typeof(Rigidbody))]
 public class CustomVRGrab : MonoBehaviour
@@ -12,7 +12,6 @@ public class CustomVRGrab : MonoBehaviour
     private Transform currentHand;
     private bool isGrabbed = false;
 
-    // Variables para calcular el impulso de lanzamiento
     private Vector3 lastPosition;
     private Vector3 throwVelocity;
 
@@ -23,13 +22,11 @@ public class CustomVRGrab : MonoBehaviour
 
     void Update()
     {
-        // Detecta directamente la presión del botón Grip en cada mano
         bool leftGripPressed = IsGripPressed(XRNode.LeftHand);
         bool rightGripPressed = IsGripPressed(XRNode.RightHand);
 
         if (!isGrabbed)
         {
-            // Agarra el cubo si la mano está cerca y el Grip está presionado
             if (CanGrab(leftHandTransform) && leftGripPressed)
             {
                 Grab(leftHandTransform);
@@ -43,7 +40,6 @@ public class CustomVRGrab : MonoBehaviour
         {
             CalculateThrowVelocity();
 
-            // Detecta cuando la mano que sostiene el objeto suelta el botón Grip
             bool releasedLeft = (currentHand == leftHandTransform) && !leftGripPressed;
             bool releasedRight = (currentHand == rightHandTransform) && !rightGripPressed;
 
@@ -66,7 +62,6 @@ public class CustomVRGrab : MonoBehaviour
     private bool CanGrab(Transform hand)
     {
         if (hand == null) return false;
-        // Distancia máxima para poder tomar el cubo (20 cm)
         return Vector3.Distance(transform.position, hand.position) < 0.2f;
     }
 
@@ -87,15 +82,15 @@ public class CustomVRGrab : MonoBehaviour
     {
         isGrabbed = true;
         currentHand = hand;
-        rb.isKinematic = true; // Desactiva físicas mientras se sostiene
+        rb.isKinematic = true; 
         lastPosition = hand.position;
     }
 
     private void Release()
     {
         isGrabbed = false;
-        rb.isKinematic = false; // Reactiva físicas
-        rb.linearVelocity = throwVelocity * 1.2f; // Multiplicador de impulso para lanzar
+        rb.isKinematic = false; 
+        rb.linearVelocity = throwVelocity * 1.2f; 
         currentHand = null;
     }
 
